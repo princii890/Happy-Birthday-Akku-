@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical Cake Celebration!</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --neon-blue: #00ffff;
+            --neon-purple: #bc13fe;
+            --space-black: #0a0a1a;
+            --star-white: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, var(--space-black) 60%, #2a0a4a);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .stars {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: var(--star-white);
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .heading {
+            font-size: 4rem;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 2rem;
+            text-align: center;
+            animation: titleFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px var(--neon-purple));
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .cake-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 30px rgba(255, 113, 182, 0.5));
+        }
+
+        .cake-container:hover {
+            transform: scale(1.05) rotate(-2deg);
+        }
+
+        .cake {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .layer {
+            position: absolute;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 
+                0 0 30px var(--neon-pink),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .layer-1 {
+            height: 100px;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff00ff, #bc13fe);
+            z-index: 3;
+        }
+
+        .layer-2 {
+            height: 90px;
+            bottom: 90px;
+            width: 85%;
+            left: 7.5%;
+            background: linear-gradient(45deg, #bc13fe, #8a2be2);
+            z-index: 2;
+        }
+
+        .layer-3 {
+            height: 80px;
+            bottom: 170px;
+            width: 70%;
+            left: 15%;
+            background: linear-gradient(45deg, #8a2be2, #4b0082);
+            z-index: 1;
+        }
+
+        .frosting {
+            position: absolute;
+            width: 25px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            top: -15px;
+            filter: drop-shadow(0 0 5px white);
+        }
+
+        .candle {
+            position: absolute;
+            width: 25px;
+            height: 80px;
+            background: linear-gradient(to right, #fff, #ffd1e3);
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 10px;
+            z-index: 10;
+            filter: drop-shadow(0 0 10px white);
+        }
+
+        .flame {
+            position: absolute;
+            width: 25px;
+            height: 40px;
+            background: linear-gradient(to bottom, #ff9d00, #ff5e00);
+            border-radius: 50% 50% 20% 20%;
+            top: -35px;
+            animation: flameFloat 0.8s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px #ff9d00);
+        }
+
+        @keyframes flameFloat {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg) scale(1.1); }
+        }
+
+        .glow-particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            filter: blur(3px);
+            animation: particleFloat 3s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+
+        .next-page-button {
+            position: fixed;
+            bottom: 40px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
+            border: none;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 25px var(--neon-pink),
+                0 0 50px var(--neon-blue);
+            z-index: 1000;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .next-page-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 0 35px var(--neon-pink),
+                0 0 70px var(--neon-blue);
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+        }
+
+        .neon-border {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--neon-pink);
+            border-radius: 15px;
+            box-shadow: 
+                inset 0 0 15px var(--neon-pink),
+                0 0 30px var(--neon-pink);
+            animation: borderPulse 2s infinite;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.3; }
+        }
+
+
+
+ /* नया बटन CSS जोड़ें */
+ .next-page-button.show {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            animation: buttonPulse 1.5s infinite;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.1); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    <h1 class="heading">Magical Cake Time! ✨</h1>
+    <div class="cake-container">
+        <div class="cake">
+            <div class="neon-border"></div>
+            <div class="layer layer-1">
+                <div class="frosting"></div>
+                <div class="frosting" style="left: 50px"></div>
+                <div class="frosting" style="right: 50px"></div>
+            </div>
+            <div class="layer layer-2">
+                <div class="frosting"></div>
+                <div class="frosting" style="left: 45px"></div>
+                <div class="frosting" style="right: 45px"></div>
+            </div>
+            <div class="layer layer-3">
+                <div class="frosting"></div>
+                <div class="frosting" style="left: 40px"></div>
+                <div class="frosting" style="right: 40px"></div>
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="next-page-button">Begin Magic →</button>
+
+    <script>
+        // Create stars background
+        function createStars() {
+            const container = document.querySelector('.stars');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 3}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                container.appendChild(star);
+            }
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const flame = document.querySelector('.flame');
+            setInterval(() => {
+                const particle = document.createElement('div');
+                particle.className = 'glow-particle';
+                particle.style.left = `${Math.random() * 20 - 10}px`;
+                flame.appendChild(particle);
+                setTimeout(() => particle.remove(), 3000);
+            }, 300);
+        }
+
+        // Initialize animations
+        createStars();
+        createParticles();
+
+
+         // अपडेट किया हुआ JavaScript
+         document.addEventListener('DOMContentLoaded', () => {
+            const cake = document.querySelector('.cake-container');
+            const nextButton = document.querySelector('.next-page-button');
+            let celebrationStarted = false;
+
+            // केक पर क्लिक करने का इवेंट
+            cake.addEventListener('click', () => {
+                if(celebrationStarted) return;
+                celebrationStarted = true;
+
+                // बटन दिखाएं
+                setTimeout(() => {
+                    nextButton.classList.add('show');
+                }, 2000);
+
+                // एनिमेशन लॉजिक यहाँ जोड़ें
+            });
+
+            // बटन क्लिक हेंडलर
+            nextButton.addEventListener('click', () => {
+                window.location.href = 'birthday-main.html';
+            });
+
+            // स्टार्स और पार्टिकल्स इनिशियलाइज़ करें
+            createStars();
+            createParticles();
+        });
+
+
+        // Rest of your existing JavaScript code with GSAP animations...
+        // (Keep the original JavaScript functionality and add new enhancements)
+    </script>
+</body>
+</html>

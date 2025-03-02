@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Birthday Book</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+
+        .star {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: pulse 2s infinite;
+        }
+
+        .ballon {
+            position: absolute;
+            top: 10%;
+            right: 15%;
+            width: 120px;
+            filter: drop-shadow(0 0 15px #ff69b4);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .container {
+            perspective: 1000px;
+            z-index: 1;
+        }
+
+        .birthdayCard {
+            position: relative;
+            width: 400px;
+            height: 550px;
+            transform-style: preserve-3d;
+            transition: all 0.8s ease;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .birthdayCard:hover {
+            transform: rotateY(180deg);
+        }
+
+        .cardFront, .cardInside {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: linear-gradient(135deg, #fff5f5, #ffe3e3);
+            padding: 30px;
+            border: 5px solid #ff6b6b;
+            box-shadow: inset 0 0 20px rgba(255,107,107,0.2);
+        }
+
+        .cardFront {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cardInside {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #fff5f5, #ffe3e3);
+        }
+
+        /* Book spine effect */
+        .cardFront::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 15px;
+            height: 100%;
+            background: linear-gradient(to right, #ff6b6b, #ff8e53);
+            box-shadow: 5px 0 15px rgba(255,107,107,0.3);
+        }
+
+        .front-text {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .happy, .bday, .toyou {
+            color: #ff6b6b;
+            text-shadow: 2px 2px 0px #fff;
+            margin: 15px 0;
+            transform: translateZ(50px);
+        }
+
+        .happy { font-size: 2.5em; }
+        .bday { 
+            font-size: 3.5em; 
+            animation: glow 2s ease-in-out infinite;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .toyou { font-size: 1.8em; }
+
+        .plate {
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .cake {
+            width: 150px;
+            height: 80px;
+            background: linear-gradient(#ff6b6b, #ff8e53);
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(255,107,107,0.3);
+        }
+
+        .flame {
+            width: 20px;
+            height: 40px;
+            background: #ffdd59;
+            border-radius: 50% 50% 35% 35%;
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: flicker 0.1s infinite;
+        }
+
+        .wishes {
+            color: #2c3e50;
+            font-size: 1.1em;
+            line-height: 1.6;
+            padding: 20px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .bdyboy {
+            width: 180px;
+            border-radius: 50%;
+            border: 5px solid #ff6b6b;
+            margin: 20px auto;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .bdyboy:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .cat {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 120px;
+            filter: drop-shadow(0 0 10px #fff);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 10px #ff6b6b); }
+            50% { filter: drop-shadow(0 0 20px #ff8e53); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) rotate(2deg); }
+            50% { transform: translateX(-50%) rotate(-2deg); }
+            100% { transform: translateX(-50%) rotate(2deg); }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 0.4; }
+            100% { opacity: 0.8; }
+        }
+
+        /* Page lines effect */
+        .cardInside::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 30px;
+            width: 2px;
+            height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                #ff6b6b 0px,
+                #ff6b6b 5px,
+                transparent 5px,
+                transparent 10px
+            );
+        }
+
+        .name {
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .birthdayCard {
+    position: relative;
+    width: 250px; /* Pehle 400px tha, ab thoda chhota kar diya */
+    height: 400px; /* Pehle 550px tha */
+    transform-style: preserve-3d;
+    transition: all 0.8s ease;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    margin-top: -30px; /* Card ko thoda upar shift kar diya */
+}
+
+
+
+/* ... (keep all previous styles as they are) ... */
+
+.birthdayCard {
+    position: relative;
+    width: 320px; /* Reduced from 400px */
+    height: 480px; /* Reduced from 550px */
+    transform-style: preserve-3d;
+    transition: all 0.8s ease;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.container {
+    perspective: 1000px;
+    z-index: 1;
+    position: relative;
+    top: -20px; /* Move card up */
+}
+
+/* Adjust text sizes */
+.happy { font-size: 2em; }
+.bday { 
+    font-size: 2.8em; /* Reduced from 3.5em */
+}
+.toyou { font-size: 1.5em; }
+
+/* Adjust cake size */
+.cake {
+    width: 120px; /* Reduced from 150px */
+    height: 60px; /* Reduced from 80px */
+}
+
+/* Adjust wishes text */
+.wishes {
+    font-size: 0.9em; /* Reduced from 1.1em */
+    padding: 10px; /* Reduced from 20px */
+    line-height: 1.3;
+}
+
+/* Adjust image size */
+.bdyboy {
+    width: 140px; /* Reduced from 180px */
+    margin: 15px auto; /* Reduced from 20px */
+}
+
+/* Add margin to wishes text */
+.inside-text {
+    margin-bottom: 10px;
+}
+
+/* Adjust card padding */
+.cardFront, .cardInside {
+    padding: 10px; /* Reduced from 30px */
+}
+
+
+
+    </style>
+</head>
+
+<body>
+    <img src="ZUiY.gif" alt="stars" class="star">
+    <img src="5l03.gif" alt="ballon" class="ballon">
+    <div class="container">
+        <div class="birthdayCard">
+            <div class="cardFront">
+                <div class="front-text">
+                    <h3 class="happy">HAPPY</h3>
+                    <h2 class="bday">BIRTHDAY</h2>
+                    <h3 class="toyou">to you!</h3>
+                </div>
+                <div class="plate">
+                    <div class="cake"></div>
+                    <div class="flame"></div>
+                </div>
+            </div>
+            <div class="cardInside">
+                <div class="img">
+                   
+                    <img src="6ob.gif" alt="confetti" class="confetti">
+                </div>
+                <div class="inside-text">
+                    <h3 class="happy">HAPPY</h3>
+                    <h2 class="bday">BIRTHDAY</h2>
+                    <h3 class="toyou">to you!</h3>
+                </div>
+                <div class="wishes">
+                    <p>Dear Akku, My bestie, 🥰</p>
+                    <p>Happy Birthday!! 🎉🥳 I hope your day is filled with endless love and laughter like you always use to be! May all your wishes come true and your heart always shine with happiness. 💖✨</p>
+                    <p class="name">P for princii</p>
+                    <p class="name"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <img src="cat.gif" alt="cat" class="cat">
+
+
+    
+</body>
+
+</html>
